@@ -1,0 +1,21 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": "local",
+    "host": "localhost",
+    "password": "local",
+    "port": "5433",
+    "database": "audiophile"
+  },
+
+  "test": {
+    "driver": "pg",
+    "user": "locals",
+    "host": "localhost",
+    "password": "locals",
+    "port": "5434",
+    "database": "audiophiletest"
+  },
+
+  "sql-file" : true
+}
