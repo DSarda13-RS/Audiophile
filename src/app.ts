@@ -19,9 +19,9 @@ app.use('/admin',admin)
 
 set_connection_pool(pool_conf.dev as PoolConfig);
 
-app.listen(3000,()=>{
+const servers =  app.listen(3000,()=>{
     console.log('Server is listening on port 3000...');
 })
 
-export default app
+export {servers}
 

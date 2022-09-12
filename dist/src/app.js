@@ -26,6 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.servers = void 0;
 const express = require("express");
 const app = express();
 const dotenv = __importStar(require("dotenv"));
@@ -40,7 +41,7 @@ app.use('/user', user_1.default);
 app.use('/seller', seller_1.default);
 app.use('/admin', admin_1.default);
 (0, db_1.set_connection_pool)(config_1.pool_conf.dev);
-app.listen(3000, () => {
+const servers = app.listen(3000, () => {
     console.log('Server is listening on port 3000...');
 });
-exports.default = app;
+exports.servers = servers;

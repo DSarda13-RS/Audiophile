@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const app_1 = __importDefault(require("../app"));
+const app_1 = require("../app");
 const db_1 = require("../db");
 const config_1 = require("../validations/config");
 const path_1 = __importDefault(require("path"));
@@ -21,19 +21,38 @@ const baseURL = "http://localhost:3000";
 (0, db_1.set_connection_pool)(config_1.pool_config_test.test);
 let server;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    server = app_1.default.listen(3000, () => {
-        console.log('Server is listening on port 3000...');
-    });
+    server = app_1.servers;
 }));
 describe("POST /user/register", () => {
+    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.txt')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
+        yield expect(response.statusCode).toBe(400);
+    }));
+    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 123, 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
+        yield expect(response.statusCode).toBe(400);
+    }));
+    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
+        yield expect(response.statusCode).toBe(400);
+    }));
+    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'tes1234', 'address': 'Gotham City1' });
+        yield expect(response.statusCode).toBe(400);
+    }));
+    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234' });
+        yield expect(response.statusCode).toBe(400);
+    }));
     it("should return 200", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'dev12345@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(200);
-        // expect(response.body.error).toBe(null);
+    }));
+    it("should return 409", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
+        yield expect(response.statusCode).toBe(409);
     }));
 });
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield server.close();
-    // await server.close();
-    // await request(baseURL).delete(`/todo/${newTodo.id}`)
 }));
