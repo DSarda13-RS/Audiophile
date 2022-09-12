@@ -45,6 +45,52 @@ describe("POST /user/register", () => {
     });
 });
 
+let accessToken: string;
+
+describe("POST /user/login", () => {
+    it("should return 403, if email is not valid",  async() => {
+        const body = {
+            email: 'devsarda789gmail.com',
+            password: 'test1234'
+        };
+        const response = await request(baseURL).post("/user/login").send(body);
+        await expect(response.statusCode).toBe(403);
+    });
+    it("should return 403",  async() => {
+        const body = {
+            email: 'devsarda789@gmail.com',
+            password: 'tes1234'
+        };
+        const response = await request(baseURL).post("/user/login").send(body);
+        await expect(response.statusCode).toBe(403);
+    });
+    it("should return 403",  async() => {
+        const body = {
+            email: 'devsardaa1@gmail.com',
+            password: 'test1234'
+        };
+        const response = await request(baseURL).post("/user/login").send(body);
+        await expect(response.statusCode).toBe(403);
+    });
+    it("should return 401",  async() => {
+        const body = {
+            email: 'devsarda789@gmail.com',
+            password: 'test12345'
+        };
+        const response = await request(baseURL).post("/user/login").send(body);
+        await expect(response.statusCode).toBe(401);
+    });
+    it("should return 200",  async() => {
+        const body = {
+            email: 'devsarda789@gmail.com',
+            password: 'test1234'
+        };
+        const response = await request(baseURL).post("/user/login").send(body);
+        accessToken = response.body.accessToken;
+        await expect(response.statusCode).toBe(200);
+    });
+});
+
 afterAll(async () => {
     await server.close();
 });

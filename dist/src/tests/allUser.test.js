@@ -24,23 +24,23 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     server = app_1.servers;
 }));
 describe("POST /user/register", () => {
-    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("should return 400, if uploaded file is not image", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.txt')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(400);
     }));
-    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("should return 400, if provided name is invalid", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 123, 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(400);
     }));
-    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("should return 400, if provided email is invalid", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(400);
     }));
-    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("should return 400, if provided password is invalid", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'tes1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(400);
     }));
-    it("should return 400", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("should return 400, if address is not provided", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234' });
         yield expect(response.statusCode).toBe(400);
     }));
@@ -48,9 +48,53 @@ describe("POST /user/register", () => {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(200);
     }));
-    it("should return 409", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("should return 409, if email already used", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(baseURL).post("/user/register").attach('file', path_1.default.resolve(__dirname, 'DS.jpg')).field({ 'name': 'Dev', 'email': 'devsarda789@gmail.com', 'password': 'test1234', 'address': 'Gotham City1' });
         yield expect(response.statusCode).toBe(409);
+    }));
+});
+let accessToken;
+describe("POST /user/login", () => {
+    it("should return 403, if email is not valid", () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            email: 'devsarda789gmail.com',
+            password: 'test1234'
+        };
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/login").send(body);
+        yield expect(response.statusCode).toBe(403);
+    }));
+    it("should return 403", () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            email: 'devsarda789@gmail.com',
+            password: 'tes1234'
+        };
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/login").send(body);
+        yield expect(response.statusCode).toBe(403);
+    }));
+    it("should return 403", () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            email: 'devsardaa1@gmail.com',
+            password: 'test1234'
+        };
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/login").send(body);
+        yield expect(response.statusCode).toBe(403);
+    }));
+    it("should return 401", () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            email: 'devsarda789@gmail.com',
+            password: 'test12345'
+        };
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/login").send(body);
+        yield expect(response.statusCode).toBe(401);
+    }));
+    it("should return 200", () => __awaiter(void 0, void 0, void 0, function* () {
+        const body = {
+            email: 'devsarda789@gmail.com',
+            password: 'test1234'
+        };
+        const response = yield (0, supertest_1.default)(baseURL).post("/user/login").send(body);
+        accessToken = response.body.accessToken;
+        yield expect(response.statusCode).toBe(200);
     }));
 });
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
